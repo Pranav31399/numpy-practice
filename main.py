@@ -199,3 +199,52 @@ print(np.sum(array,axis=1))
 # filtering #
 #######################################################################################################################
 
+ages=np.array([
+    [21,17,19,20,16,30,18,65],
+    [39,22,15,99,18,19,20,21]
+])
+
+# also flattens the arrays
+teenagers=ages[ages<18]
+print(teenagers)
+
+adults=ages[(ages>=18) & (ages<65)]
+print(adults)
+
+evens=ages[ages%2==0]
+print(evens)
+
+# where clause preservs the shape and which doesn't match are replaced with 0
+adults=np.where(ages>=18,ages,0)
+print(adults)
+
+#######################################################################################################################
+# random no generator #
+#######################################################################################################################
+
+# in parameter here if you pass seed=1 then you will get the same result everytime you run it
+rng=np.random.default_rng()
+# upper is exclusive
+print(rng.integers(1,7))
+
+# will generate 3 random no between 1-6 in 1d array
+print(rng.integers(1,7,3))
+
+# will generate 3 random no between 1-6 in 2d array
+print(rng.integers(1,101,(3,2)))
+
+# for generating random floating point no between -1 to 1 with size 3
+print(np.random.uniform(-1,1,3))
+# multidimensional is also possible here
+
+# shuffle an array
+rng=np.random.default_rng()
+array=np.array([1,2,3,4,5])
+rng.shuffle(array)
+print(array)
+
+fruits=np.array(["apple","orange","banana","coconut","pineapple"])
+fruit=rng.choice(fruits,(3,3))
+print(fruit)
+
+
