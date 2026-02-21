@@ -1,5 +1,3 @@
-from operator import index
-
 import pandas as pd
 
 # series - 1d labelled array (can hold any data type)
@@ -119,7 +117,128 @@ new_rows=pd.DataFrame(
 df=pd.concat([df,new_rows])
 print(df)
 
+#######################################################################################################################
+# importing #
+#######################################################################################################################
 
+# importing csv, json
+
+from pathlib import Path
+# import pandas as pd
+import sys
+
+# show current working directory (where Python is looking for relative files)
+print("cwd:", Path.cwd())
+
+# build a path relative to this script's directory (recommended)
+csv_path = Path(__file__).parent / "data.csv"
+print("looking for:", csv_path.resolve())
+
+if not csv_path.exists():
+    sys.exit(f"File not found: {csv_path}. Place `data.csv` next to `pandas/main.py` or update the path.")
+
+df = pd.read_csv(csv_path)
+print(df.head())
+
+# to print all
+# print(df.to_string())
+
+# json_path = Path(__file__).parent / "data.json"
+# df=pd.read_json(json_path)
+# print(df.to_string())
+
+# selection by column
+print(df["Name"])
+
+# selection of multiple columns
+print(df[["Name","Height","Weight"]].to_string())
+
+# selection by row/s
+# starting by 0
+print(df.loc[0])
+
+# add name to serve as index
+df=pd.read_csv(csv_path,index_col="Name")
+print(df.to_string())
+
+print(df.loc["Pikachu"])
+
+# columns you want to select
+print(df.loc["Pikachu",["Height","Weight"]])
+
+# you can use slicing as well using Name index (as in this case) or int index
+# print(df.iloc[0:11:2, 0:3])
+
+# pokemon=input("Enter a pokemon name: ")
+# try:
+#     print(df.loc[pokemon])
+# except KeyError:
+#     print(f"{pokemon} not found")
+
+#######################################################################################################################
+# filtering #
+#######################################################################################################################
+
+tall_pokemon=df[df["Height"]>=2]
+print(tall_pokemon)
+
+#######################################################################################################################
+# aggregate functions #
+#######################################################################################################################
+
+# whole dataframe
+print(df.mean(numeric_only=True))
+print(df.sum(numeric_only=True))
+print(df.min(numeric_only=True))
+print(df.max(numeric_only=True))
+print(df.count())
+
+# single column
+print(df["Height"].mean(numeric_only=True))
+
+# group by
+group=df.groupby("Type1")
+
+# getting the mean of each group type1
+print(group["Height"].mean())
+
+#######################################################################################################################
+# data cleaning #
+#######################################################################################################################
+
+# drop irrevalent columns
+df=df.drop(columns=["Legendary","No"])
+print(df)
+
+# handle missing data
+# drop any row which misses a value
+# df=df.dropna(subset=["Type2"])
+# print(df.to_string())
+
+# replace n/a values with None
+df=df.fillna({"Type2":"None"})
+print(df)
+
+# fix any inconsistent values
+df["Type1"]=df["Type1"].replace(
+    {
+        "Grass":"GRASS",
+        "Fire":"FIRE"
+    })
+print(df.to_string())
+
+# standardize text
+df=pd.read_csv(csv_path)
+df["Name"]=df["Name"].str.lower()
+print(df)
+
+# fix data type
+df["Legendary"]=df["Legendary"].astype(int)
+print(df)
+
+# remove duplicate values
+df=df.drop_duplicates()
+print(df)
 
 
 
